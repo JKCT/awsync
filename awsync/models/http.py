@@ -1,5 +1,5 @@
 "HTTP type models."
-from enum import StrEnum
+from awsync.models.strenum import StrEnum
 
 
 class Method(StrEnum):

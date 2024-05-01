@@ -78,6 +78,7 @@ Requirements:
 - Documentation with [mkDocs](https://squidfunk.github.io/mkdocs-material/)
 - Issue template
 - Repository Template variables?
+- Pre-commit hooks?
 - Test Makefile replacements
   - [Poetry run](https://python-poetry.org/docs/cli/#run)
   - [doit](https://pydoit.org/)

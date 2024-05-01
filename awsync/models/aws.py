@@ -1,5 +1,5 @@
 "AWS type models."
-from enum import StrEnum
+from awsync.models.strenum import StrEnum
 from dataclasses import dataclass
 from typing import Optional
 
