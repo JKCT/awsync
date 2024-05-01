@@ -204,7 +204,7 @@ class Client:
         region: Region,
         function_name: str,
         payload: Optional[Dict[str, Any]] = None,
-    ) -> Dict[str, Any]:
+    ) -> str:
         """
         Invokes a Lambda function.
         """
@@ -227,5 +227,4 @@ class Client:
             self.httpx_client,
             request=signed_request,
         )
-        json_response: Dict[str, Any] = json.loads(response.text)
-        return json_response
+        return response.text
