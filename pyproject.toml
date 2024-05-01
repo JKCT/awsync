@@ -1,0 +1,40 @@
+[tool.poetry]
+name = "awsync"
+version = "0.1.0"
+description = "An asynchronous, fully-typed AWS API library with a focus on being understandable, reliable, and maintainable."
+license = "Apache-2.0"
+authors = ["JKCT <jkct@visceralfx.com>"]
+readme = "README.md"
+packages = [{include = "awsync"}]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Typing :: Typed",
+    "Development Status :: 4 - Beta",
+]
+keywords = ["aws", "async", "boto", "request", "sdk", "typed"]
+repository = "https://github.com/JKCT/awsync"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+httpx = "^0.27.0"
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.4.0"
+mypy = "^1.9.0"
+pytest = "^8.1.1"
+
+[tool.mypy]
+strict = true
+color_output = true
+cache_dir = "/tmp/cache/.mypy_cache"
+
+[tool.pytest.ini_options]
+testpaths = "tests"
+cache_dir = "/tmp/cache/.pytest_cache"
+addopts = "-vv"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

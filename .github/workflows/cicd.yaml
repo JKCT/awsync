@@ -1,0 +1,50 @@
+name: CICD
+on:
+  pull_request: # https://docs.github.com/en/webhooks/webhook-events-and-payloads#pull_request
+    types: [opened, reopened, synchronize] # A PR was created, re-opened, or head branch was updated.
+  push: # https://docs.github.com/en/webhooks/webhook-events-and-payloads#push
+    branches: [main] # Changes were merged/pushed to main.
+  release: # https://docs.github.com/en/webhooks/webhook-events-and-payloads?actionType=released#release
+    types: [released] # A release was published, or a pre-release was changed to a release.
+
+jobs:
+  cicd:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set PATH # Must be done to find pipx and poetry commands
+        run: echo "$(python3 -m site --user-base)/bin:${HOME}/.local/bin:${PATH}" >> $GITHUB_PATH
+
+      - name: Install Poetry # Must be done before Setup Python to use caching
+        run: |
+          pip install -U pip pipx
+          pipx install poetry
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: "pyproject.toml"
+          cache: "poetry"
+
+      - name: Install Dependencies
+        run: make init
+
+      - name: Lint
+        run: make lint
+
+      - name: Test
+        run: make test
+
+      - name: Automatic Release
+        if: ${{ github.event_name == 'push' }}
+        run: |
+          # Save token with 'Read and write' access to 'Contents' for this respository
+          # as a Actions secret named 'GH_TOKEN' on this respository.
+          echo "${{ secrets.GH_TOKEN }}" | gh auth login --with-token
+          make release
+
+      - name: Publish
+        if: ${{ github.event_name == 'release' }}
+        run: make publish ARGS="${{ github.event.release.name }}" # Pass the release name
