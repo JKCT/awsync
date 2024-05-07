@@ -11,7 +11,7 @@ TEST_DATETIME = datetime(2000, 1, 1, 0, 0, 0, 0, tzinfo=UTC)
 TEST_DATE = request.Date("20000101")
 TEST_TIMESTAMP = request.Timestamp("20000101T000000Z")
 TEST_CREDENTIALS = Credentials(
-    access_key="TESTACCESSKEY",
+    access_key_id="TESTACCESSKEY",
     secret_access_key="TESTSECRETACCESSKEY",
     session_token="TESTSESSIONTOKEN",
 )
@@ -63,7 +63,7 @@ class TestRequestHelpers:
             },
             iso_8601_timestamp=TEST_TIMESTAMP,
             credentials=Credentials(
-                access_key="TESTACCESSKEY",
+                access_key_id="TESTACCESSKEY",
                 secret_access_key="TESTSECRETACCESSKEY",
             ),
         )

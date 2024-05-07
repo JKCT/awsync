@@ -10,8 +10,8 @@ Only a few API methods currently implemented for testing and development.
 ## Usage
 
 ```python
+"Module main."
 from asyncio import run
-import os
 from datetime import datetime, UTC
 from httpx import AsyncClient
 
@@ -23,15 +23,10 @@ async def main() -> int:
     "Main function."
     async with AsyncClient() as httpx_client:
         client = Client(
-            credentials=Credentials(
-                access_key=os.environ["AWS_ACCESS_KEY_ID"],
-                secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"],
-                session_token=os.environ.get("AWS_SESSION_TOKEN"),
-            ),
+            credentials=Credentials.from_environment(),
             httpx_client=httpx_client,
             utcnow=lambda: datetime.now(UTC),
         )
-
         response = await client.list_stack_resources(
             region=Region.us_east_1, stack_name="Example-Stack-Name"
         )
@@ -42,8 +37,6 @@ async def main() -> int:
 if __name__ == "__main__":
     run(main())
 ```
-
-See [awsync/**main**.py](./awsync/__main__.py) for more examples.
 
 ## Local Developer Setup
 
@@ -78,7 +71,6 @@ Requirements:
 - Documentation with [mkDocs](https://squidfunk.github.io/mkdocs-material/)
 - Issue template
 - Repository Template variables?
-- Pre-commit hooks?
 - Test Makefile replacements
   - [Poetry run](https://python-poetry.org/docs/cli/#run)
   - [doit](https://pydoit.org/)

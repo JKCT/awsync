@@ -1,6 +1,5 @@
 "Module main."
 from asyncio import run
-import os
 from datetime import datetime, UTC
 from httpx import AsyncClient
 
@@ -12,17 +11,12 @@ async def main() -> int:
     "Main function."
     async with AsyncClient() as httpx_client:
         client = Client(
-            credentials=Credentials(
-                access_key=os.environ["AWS_ACCESS_KEY_ID"],
-                secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"],
-                session_token=os.environ.get("AWS_SESSION_TOKEN"),
-            ),
+            credentials=Credentials.from_environment(),
             httpx_client=httpx_client,
             utcnow=lambda: datetime.now(UTC),
         )
-
         response = await client.list_stack_resources(
-            region=Region.us_east_1, stack_name="Test-Stack-Name"
+            region=Region.us_east_1, stack_name="Example-Stack-Name"
         )
         print(response)
         return 0

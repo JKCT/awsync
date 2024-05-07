@@ -154,7 +154,7 @@ def _get_authorization_header(
     ).hexdigest()
     authorization_header_value = ",".join(
         [
-            f"AWS4-HMAC-SHA256 Credential={credentials.access_key}/{scope}",
+            f"AWS4-HMAC-SHA256 Credential={credentials.access_key_id}/{scope}",
             f"SignedHeaders={';'.join(sorted([k.lower() for k in canonical_headers.keys()]))}",
             f"Signature={signature}",
         ]

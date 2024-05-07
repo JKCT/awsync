@@ -2,17 +2,26 @@
 from awsync.models.strenum import StrEnum
 from dataclasses import dataclass
 from typing import Optional
+import os
 
 
 @dataclass(frozen=True)
 class Credentials:
     "AWS Credentials."
-    access_key: str
+    access_key_id: str
     "The Access Key ID."
     secret_access_key: str
     "The Secret Access Key."
     session_token: Optional[str] = None
     "(Optional) The session security token if using temporary credentials."
+
+    @classmethod
+    def from_environment(cls) -> "Credentials":
+        return cls(
+            access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
+            secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"],
+            session_token=os.environ.get("AWS_SESSION_TOKEN"),
+        )
 
 
 class Region(StrEnum):
