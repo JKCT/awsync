@@ -22,21 +22,9 @@ async def main() -> int:
         )
 
         response = await client.list_stack_resources(
-            region=Region.us_east_1, stack_name="AWSRails-S3"
+            region=Region.us_east_1, stack_name="Test-Stack-Name"
         )
         print(response)
-        response_2 = await client.get_resource(
-            region=Region.us_east_1,
-            resource_type="AWS::S3::Bucket",
-            identifier="awsrails-785590537371-us-east-1",
-        )
-        print(response_2)
-        response_3 = await client.invoke(
-            region=Region.us_east_1,
-            function_name="AWSRails",
-            payload={"test": "value"},
-        )
-        print(response_3)
         return 0
 
 

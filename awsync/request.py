@@ -30,7 +30,14 @@ def _get_query_string(query: Optional[Dict[str, str]]) -> str:
         return ""
 
     # quote = UriEncode, sorted = alphabetical sort starting with key
-    return "&".join(sorted([f"{quote(k)}={quote(v)}" for k, v in query.items()]))
+    return "&".join(
+        sorted(
+            [
+                f"{quote(k, safe='-_.~')}={quote(v, safe='-_.~')}"
+                for k, v in query.items()
+            ]
+        )
+    )
 
 
 def _get_canonical_headers(

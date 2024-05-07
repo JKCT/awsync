@@ -31,13 +31,27 @@ class TestRequestHelpers:
         "Test _get_query_string with None value."
         assert request._get_query_string(None) == ""
 
-    def test_non_empty_get_query_string(self) -> None:
-        "Test _get_query_string with alphabetical key sorting and keys/values that include spaces and non-alpha characters for URI encoding."
+    def test_get_query_string_sorting(self) -> None:
+        "Test _get_query_string with multiple items and alphabetical key sorting."
         assert (
             request._get_query_string(
-                {"zero": "value with spaces", "alpha space": "!@#$%^&*:/="}
+                {
+                    "z": "two",
+                    "a": "one",
+                }
             )
-            == "alpha%20space=%21%40%23%24%25%5E%26%2A%3A/%3D&zero=value%20with%20spaces"
+            == "a=one&z=two"
+        )
+
+    def test_get_query_string_encoding(self) -> None:
+        "Test _get_query_string with all printable ASCII characters."
+        assert (
+            request._get_query_string(
+                {
+                    "test": " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~",
+                }
+            )
+            == "test=%20%21%22%23%24%25%26%27%28%29%2A%2B%2C-.%2F0123456789%3A%3B%3C%3D%3E%3F%40ABCDEFGHIJKLMNOPQRSTUVWXYZ%5B%5C%5D%5E_%60abcdefghijklmnopqrstuvwxyz%7B%7C%7D~"
         )
 
     def test_get_canonical_headers_without_token(self) -> None:
