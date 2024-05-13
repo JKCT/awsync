@@ -1,0 +1,40 @@
+---
+name: 🌟 Feature
+description: Submit a request for a new feature
+title: "[FEAT]: (short description)"
+labels: [feature, new]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: "A descriptive explaination of the feature."
+    validations:
+      required: true
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use Case
+      description: "What use case does this feature enable?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: implementation
+    attributes:
+      label: Proposed Implementation
+      description: "How can this feature be implemented?"
+      render: python
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: options
+    attributes:
+      label: Options
+      options:
+        - label: "I can contribute this feature."
+          required: false
+        - label: "This feature will cause breaking changes."
+          required: false

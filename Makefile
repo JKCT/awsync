@@ -28,7 +28,7 @@ release:
 .PHONY: publish
 publish:
 	./version_check.sh $(ARGS)
-	#poetry publish --build
+	poetry publish --build
 
 .PHONY: pr
 pr: format lint test

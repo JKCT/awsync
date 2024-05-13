@@ -1,0 +1,21 @@
+---
+name: 📖 Documentation
+description: Report an issue with the documentation
+title: "[DOCS]: (short description)"
+labels: [documentation, new]
+body:
+  - type: input
+    id: link
+    attributes:
+      label: Link
+      description: "Link to the relevant documentation section."
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: "A descriptive explaination of the documentation issue with steps on resolution."
+    validations:
+      required: true

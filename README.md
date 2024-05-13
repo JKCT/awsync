@@ -12,7 +12,6 @@ Only a few API methods currently implemented for testing and development.
 ```python
 "Module main."
 from asyncio import run
-from datetime import datetime, UTC
 from httpx import AsyncClient
 
 from awsync.client import Client
@@ -25,13 +24,12 @@ async def main() -> int:
         client = Client(
             credentials=Credentials.from_environment(),
             httpx_client=httpx_client,
-            utcnow=lambda: datetime.now(UTC),
         )
         response = await client.list_stack_resources(
             region=Region.us_east_1, stack_name="Example-Stack-Name"
         )
         print(response)
-        return 0
+    return 0
 
 
 if __name__ == "__main__":
@@ -65,12 +63,10 @@ Requirements:
 
 ## Repository TODO:
 
-- Logging
-- Test Coverage
+- Code generation [from JSON](https://github.com/boto/botocore/tree/develop/botocore/data)
 - Automatic Publish CICD
 - Documentation with [mkDocs](https://squidfunk.github.io/mkdocs-material/)
-- Issue template
-- Repository Template variables?
 - Test Makefile replacements
+  - [mise](https://mise.jdx.dev/)
   - [Poetry run](https://python-poetry.org/docs/cli/#run)
   - [doit](https://pydoit.org/)

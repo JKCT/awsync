@@ -1,6 +1,6 @@
 "AWS type models."
 from awsync.models.strenum import StrEnum
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional
 import os
 
@@ -10,18 +10,24 @@ class Credentials:
     "AWS Credentials."
     access_key_id: str
     "The Access Key ID."
-    secret_access_key: str
+    secret_access_key: str = field(repr=False)  # Avoid logging secret values.
     "The Secret Access Key."
     session_token: Optional[str] = None
     "(Optional) The session security token if using temporary credentials."
 
     @classmethod
     def from_environment(cls) -> "Credentials":
-        return cls(
-            access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
-            secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"],
-            session_token=os.environ.get("AWS_SESSION_TOKEN"),
-        )
+        try:
+            return cls(
+                access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
+                secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"],
+                session_token=os.environ.get("AWS_SESSION_TOKEN"),
+            )
+        except KeyError as exc:
+            raise KeyError(
+                "Unable to find AWS credentials in environment variables when calling Credentials.from_environment(). "
+                "Ensure environment variables 'AWS_ACCESS_KEY_ID' and 'AWS_SECRET_ACCESS_KEY' are set before calling Credentials.from_environment() or use Credentials() to set values directly."
+            ) from exc
 
 
 class Region(StrEnum):

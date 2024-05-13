@@ -1,6 +1,5 @@
 "Module main."
 from asyncio import run
-from datetime import datetime, UTC
 from httpx import AsyncClient
 
 from awsync.client import Client
@@ -13,13 +12,12 @@ async def main() -> int:
         client = Client(
             credentials=Credentials.from_environment(),
             httpx_client=httpx_client,
-            utcnow=lambda: datetime.now(UTC),
         )
         response = await client.list_stack_resources(
             region=Region.us_east_1, stack_name="Example-Stack-Name"
         )
         print(response)
-        return 0
+    return 0
 
 
 if __name__ == "__main__":

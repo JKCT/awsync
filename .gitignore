@@ -1,2 +1,4 @@
 # Poetry packaging
 dist/
+# Test coverage
+.coverage

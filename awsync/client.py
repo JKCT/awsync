@@ -1,9 +1,10 @@
 "Middle level abstraction async AWS client for API requests."
 import asyncio
 from dataclasses import dataclass
-from datetime import datetime
+import datetime
 import json
 from typing import Any, Callable, Dict, List, Optional
+import logging
 
 from httpx import AsyncClient
 
@@ -32,13 +33,15 @@ class StatusError(Exception):
 async def request_with_retry(
     client: AsyncClient,
     request: Request,
+    logger: logging.Logger,
     retries: int = 3,
 ) -> Response:
     """
     Make an async HTTP request with retries and exponential backoff.
     Will only retry if request fails due to throttling or a server error.
     """
-    attempt = 0
+    logger.debug(f"Sending request to AWS API: '{request}'")
+    attempt = 1
     client_response = await client.request(
         method=request.method,
         url=request.get_url(),
@@ -46,17 +49,19 @@ async def request_with_retry(
         params=request.query,
         json=request.body,
     )
+
+    # Retry if remote error or throttling with exponential backoff
     while client_response.status_code >= 500 or (
         client_response.status_code == 400 and "Throttling" in client_response.text
     ):
         # Base case
         if attempt > retries:
             raise MaxRetriesException(
-                f"Maximum number of retries '{retries}' exceeded.\n"
-                f"Response: {client_response}"
+                f"Maximum number of retries '{retries}' exceeded. "
+                f"Response: '{client_response}'"
             )
-        # Retry if remote error or throttling - exponential backoff
         await asyncio.sleep(2**attempt)
+        logger.warn(f"Attempting retry '{attempt}' of '{retries}'...")
         client_response = await client.request(
             method=request.method,
             url=request.get_url(),
@@ -65,10 +70,19 @@ async def request_with_retry(
             json=request.body,
         )
         attempt += 1
+
     response = Response(status=client_response.status_code, text=client_response.text)
+    logger.debug(f"Recieved response: '{response}'")
     if response.status < 200 or response.status >= 300:
-        raise StatusError(f"Recieved non-2XX response code.\n" f"Response: {response}")
+        raise StatusError(
+            f"Recieved non-2XX response code from AWS API. " f"Response: '{response}'"
+        )
     return response
+
+
+def utcnow() -> datetime.datetime:
+    "A zero argument callable function that returns the current datetime in UTC."
+    return datetime.datetime.now(datetime.UTC)
 
 
 @dataclass(frozen=True)
@@ -78,40 +92,10 @@ class Client:
     "AWS credentials."
     httpx_client: AsyncClient
     "The httpx AsyncClient to use for async reqeusts."
-    utcnow: Callable[[], datetime]
+    logger: logging.Logger = logging.getLogger(__name__)
+    "The logger to use for logging, can be set to control log level and format."
+    utcnow: Callable[[], datetime.datetime] = utcnow
     "A zero argument callable function that returns the current datetime in UTC."
-
-    async def assume_role(
-        self,
-        role_arn: str,
-    ) -> Dict[str, Any]:
-        "Get AWS Role credentials with STS AssumeRole."
-        service = "sts"
-        region = Region.us_east_1
-        request = Request(
-            credentials=self.credentials,
-            method=Method.POST,
-            host=f"{service}.amazonaws.com",
-            body={
-                "Action": "AssumeRole",
-                "RoleArn": role_arn,
-                "RoleSessionName": "AsyncSession",
-                "Version": "2011-06-15",
-            },
-            headers={
-                "Accept": "application/json",
-                "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
-            },
-        )
-        signed_request = request.sign(
-            utc_now=self.utcnow(), service=service, region=region
-        )
-        response = await request_with_retry(
-            self.httpx_client,
-            request=signed_request,
-        )
-        json_response: Dict[str, Any] = json.loads(response.text)
-        return json_response
 
     async def list_stack_resources(
         self,
@@ -146,6 +130,7 @@ class Client:
         response = await request_with_retry(
             self.httpx_client,
             request=signed_request,
+            logger=self.logger,
         )
 
         json_response = json.loads(response.text)
@@ -193,6 +178,7 @@ class Client:
         response = await request_with_retry(
             self.httpx_client,
             request=signed_request,
+            logger=self.logger,
         )
         json_response = json.loads(response.text)
         properties = json_response["ResourceDescription"]["Properties"]
@@ -226,5 +212,6 @@ class Client:
         response = await request_with_retry(
             self.httpx_client,
             request=signed_request,
+            logger=self.logger,
         )
         return response.text
