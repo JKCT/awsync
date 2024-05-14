@@ -2,7 +2,7 @@
 Please title your pull request as one of the following:
 [FEATURE] - Description of the new feature
 [UPDATE] - Description of the update
-[BUG] - Description of the bug fix
+[FIX] - Description of the bug fix
 [DOCS] - Description of the documentation changes
 [MAINT] - Description of the maintenance to the repository
 

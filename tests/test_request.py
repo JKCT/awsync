@@ -1,6 +1,6 @@
 "Test module main function."
 from datetime import UTC, datetime
-from unittest.mock import patch
+from unittest.mock import call, patch
 
 from awsync.models.aws import Credentials, Region
 from awsync.models.http import Method, Scheme
@@ -19,6 +19,33 @@ TEST_CREDENTIALS = Credentials(
 
 class TestRequestHelpers:
     "Test the Request helper functions."
+
+    def test_uri_encode_is_path_false(self) -> None:
+        """
+        Test _uri_encode with is_path=False on all printable ASCII characters.
+        See _uri_encode docstring for full details.
+        Should encode "/".
+        """
+        assert (
+            request._uri_encode(
+                " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"
+            )
+            == "%20%21%22%23%24%25%26%27%28%29%2A%2B%2C-.%2F0123456789%3A%3B%3C%3D%3E%3F%40ABCDEFGHIJKLMNOPQRSTUVWXYZ%5B%5C%5D%5E_%60abcdefghijklmnopqrstuvwxyz%7B%7C%7D~"
+        )
+
+    def test_uri_encode_is_path_true(self) -> None:
+        """
+        Test _uri_encode with is_path=True on all printable ASCII characters.
+        See _uri_encode docstring for full details.
+        Should not encode "/".
+        """
+        assert (
+            request._uri_encode(
+                " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~",
+                is_path=True,
+            )
+            == "%20%21%22%23%24%25%26%27%28%29%2A%2B%2C-./0123456789%3A%3B%3C%3D%3E%3F%40ABCDEFGHIJKLMNOPQRSTUVWXYZ%5B%5C%5D%5E_%60abcdefghijklmnopqrstuvwxyz%7B%7C%7D~"
+        )
 
     def test_sha_hash(self) -> None:
         "Test _sha_hash (Hex(SHA256Hash(<VALUE>))."
@@ -44,15 +71,20 @@ class TestRequestHelpers:
         )
 
     def test_get_query_string_encoding(self) -> None:
-        "Test _get_query_string with all printable ASCII characters."
-        assert (
-            request._get_query_string(
-                {
-                    "test": " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~",
-                }
+        "Test _get_query_string has expected calls to _uri_encode."
+        with patch("awsync.request._uri_encode") as _uri_encode_mock:
+            _uri_encode_mock.return_value = "mock_value"
+            assert (
+                request._get_query_string(
+                    {
+                        "key": "value",
+                    }
+                )
+                == "mock_value=mock_value"
             )
-            == "test=%20%21%22%23%24%25%26%27%28%29%2A%2B%2C-.%2F0123456789%3A%3B%3C%3D%3E%3F%40ABCDEFGHIJKLMNOPQRSTUVWXYZ%5B%5C%5D%5E_%60abcdefghijklmnopqrstuvwxyz%7B%7C%7D~"
-        )
+            _uri_encode_mock.assert_has_calls(
+                [call("key"), call("value")], any_order=True
+            )
 
     def test_get_canonical_headers_without_token(self) -> None:
         "Test _get_canonical_headers with a Credentials.session_token."

@@ -19,24 +19,41 @@ Date = NewType("Date", str)
 Timestamp = NewType("Timestamp", str)
 
 
+def _uri_encode(string: str, is_path: bool = False) -> str:
+    """
+    URI encode every byte.
+    If is_path=True, '/' is not encoded, see last rule below.
+
+    UriEncode() must enforce the following rules:
+    - URI encode every byte except the unreserved characters: 'A'-'Z', 'a'-'z', '0'-'9', '-', '.', '_', and '~'.
+    - The space character is a reserved character and must be encoded as "%20" (and not as "+").
+    - Each URI encoded byte is formed by a '%' and the two-digit hexadecimal value of the byte.
+    - Letters in the hexadecimal value must be uppercase, for example "%1A".
+    - Encode the forward slash character, '/', everywhere except in the object key name (request path). For example, if the object key name is photos/Jan/sample.jpg, the forward slash in the key name is not encoded.
+    """
+    unreserved_characters = "-_.~"
+    if is_path:
+        unreserved_characters += "/"
+    return quote(string, safe=unreserved_characters)
+
+
 def _sha_hash(string: str) -> str:
     "Secure Hash Algorithm (SHA) 256 cryptographic hash function then encoded with Lowercase base 16 encoding (Hex)."
     return sha256(string.encode()).hexdigest()
 
 
 def _get_query_string(query: Optional[Dict[str, str]]) -> str:
-    "The URI-encoded query string parameters. You URI-encode each name and values individually. You must also sort the parameters in the canonical query string alphabetically by key name. The sorting occurs after encoding. NOTE: Does not include '?' at the start."
+    """
+    The URI-encoded query string parameters.
+    You URI-encode each name and values individually.
+    You must also sort the parameters in the canonical query string alphabetically by key name.
+    The sorting occurs after encoding.
+    NOTE: Does not include '?' at the start.
+    """
     if not query:
         return ""
-
-    # quote = UriEncode, sorted = alphabetical sort starting with key
     return "&".join(
-        sorted(
-            [
-                f"{quote(k, safe='-_.~')}={quote(v, safe='-_.~')}"
-                for k, v in query.items()
-            ]
-        )
+        sorted([f"{_uri_encode(k)}={_uri_encode(v)}" for k, v in query.items()])
     )
 
 
@@ -97,7 +114,7 @@ def _get_canonical_request(
     return "\n".join(
         [
             method,
-            path,
+            _uri_encode(path, is_path=True),
             query_string,
             canonical_headers_string,
             signed_headers_string,

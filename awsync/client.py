@@ -10,7 +10,7 @@ from httpx import AsyncClient
 
 from awsync.models.aws import Credentials, Region
 from awsync.models.http import Method
-from awsync.request import Request
+from awsync.request import Request, _uri_encode
 
 
 @dataclass(frozen=True)
@@ -199,7 +199,7 @@ class Client:
             credentials=self.credentials,
             method=Method.POST,
             host=f"{service}.{region}.amazonaws.com",
-            path=f"/2015-03-31/functions/{function_name}/invocations",
+            path=f"/2015-03-31/functions/{_uri_encode(function_name)}/invocations",
             body=payload,
             headers={
                 "Accept": "application/json",
