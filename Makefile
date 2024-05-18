@@ -6,28 +6,31 @@ init:
 run:
 	poetry run python -B awsync
 
-.PHONY: lint
-lint:
-	poetry check
-	poetry run black --check awsync tests
-	poetry run mypy awsync tests
-
 .PHONY: format
 format:
 	poetry run black awsync tests
+
+.PHONY: lint
+lint:
+	./version_check.sh # Checks branch version is updated from main
+	poetry check # Checks lockfile is up to date
+	poetry run black --check awsync tests
+	poetry run mypy awsync tests
 
 .PHONY: test
 test:
 	poetry run python -B -m pytest
 
+.PHONY: docs
+docs:
+	./docs.sh
+
 .PHONY: release
 release:
-	echo "disabled until implementation is complete"
-	#./automatic_release.sh
+	./release.sh $(TOKEN)
 
 .PHONY: publish
 publish:
-	./version_check.sh $(ARGS)
 	poetry publish --build
 
 .PHONY: pr

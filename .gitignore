@@ -2,3 +2,5 @@
 dist/
 # Test coverage
 .coverage
+# MKDocs documentation build directory
+site/

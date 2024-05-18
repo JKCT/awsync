@@ -4,6 +4,8 @@
 
 An asynchronous, fully-typed AWS API library with a focus on being understandable, reliable, and maintainable.
 
+Read [the documentation](https://jkct.github.io/awsync/).
+
 **NOTE: Currently a work in progress!**
 Only a few API methods currently implemented for testing and development.
 
@@ -40,16 +42,18 @@ if __name__ == "__main__":
 
 Requirements:
 
-- [make](https://www.gnu.org/software/make/)
-- [python3](https://www.python.org/)
+- [python](https://www.python.org/) 3.8 or greater
 - [poetry](https://python-poetry.org/)
+- [make](https://www.gnu.org/software/make/)
 
 ### Package Management
 
-- `make init` install/update dependencies, alias for `poetry install --sync`.
-- `poetry add` add a dependency ie. `poetry add pydantic`.
+This repository uses [poetry](https://python-poetry.org/) for python package management.
+
+- `poetry install --sync` install/update dependencies, aliased to `make init`.
+- `poetry add` add a dependency ie. `poetry add black`.
 - `poetry add -D` add a development dependency ie. `poetry add -D black`.
-- `poetry remove` remove a dependency ie. `poetry remove pydantic`.
+- `poetry remove` remove a dependency ie. `poetry remove black`.
 - `poetry shell` activate the python virtual environment.
 - `exit` exit the python virtual environment.
 
@@ -63,9 +67,7 @@ Requirements:
 
 ## Repository TODO:
 
-- Code generation [from JSON](https://github.com/boto/botocore/tree/develop/botocore/data)
 - Automatic Publish CICD
-- Documentation with [mkDocs](https://squidfunk.github.io/mkdocs-material/)
 - Test Makefile replacements
   - [mise](https://mise.jdx.dev/)
   - [Poetry run](https://python-poetry.org/docs/cli/#run)

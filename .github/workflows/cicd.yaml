@@ -7,6 +7,9 @@ on:
   release: # https://docs.github.com/en/webhooks/webhook-events-and-payloads?actionType=released#release
     types: [released] # A release was published, or a pre-release was changed to a release.
 
+permissions:
+  contents: write # Create releases and publish to pages
+
 jobs:
   cicd:
     runs-on: ubuntu-latest
@@ -40,11 +43,14 @@ jobs:
       - name: Automatic Release
         if: ${{ github.event_name == 'push' }}
         run: |
-          # Save token with 'Read and write' access to 'Contents' for this respository
-          # as a Actions secret named 'GH_TOKEN' on this respository.
-          echo "${{ secrets.GH_TOKEN }}" | gh auth login --with-token
-          make release
+          make release TOKEN=${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish
+      - name: Publish Documentation
         if: ${{ github.event_name == 'release' }}
-        run: make publish ARGS="${{ github.event.release.name }}" # Pass the release name
+        run: make docs
+
+      - name: Publish Package
+        if: ${{ github.event_name == 'release' }}
+        run: |
+          poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN }}
+          make publish
