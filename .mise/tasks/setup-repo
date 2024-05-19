@@ -1,20 +1,48 @@
 #!/usr/bin/env bash
+# mise description="Setup repository from template."
 set -e # Exit on error
 
-# Configure Repository settings
-configure_repository () {
+# Get variables from input
+get_variables() {
+  clear
+  echo "This script will setup the template repository by replacing the template variables."
+  echo "You will need the following information:"
+  echo "- Repository name (ie. 'example-repo' in https://github.com/octocat/example-repo/)."
+  echo "- Repository owner name (ie. 'octocat' in https://github.com/octocat/example-repo/)."
+  echo "- GitHub token with with 'pages:write' and 'administration:write' permissions to repository."
+  echo ""
+
   # Get variables from user input
   read -p "Enter repository name: " REPO
   read -p "Enter repository owner name: " OWNER
   read -p "Enter repository token with 'pages:write' and 'administration:write' permissions: " TOKEN
 
+  clear
+  echo "Repository name: ${REPO}"
+  echo "Repository owner name: ${OWNER}"
+  echo "Repository token ending with: ${TOKEN: -5}"
+  read -p "Proceed with the following values? (y/n): " choice
+
+  case "$choice" in 
+    [yY]|[yY][eE][sS] ) configure_repository;;
+    * ) exit;;
+  esac
+}
+
+# Configure Repository settings
+configure_repository () {
   # Requires token with permissions: administration:write
   # https://docs.github.com/en/rest/repos/repos?apiVersion=2022-11-28#update-a-repository
+  echo ""
   echo "Configuring repository settings..."
   echo "- Enable GitHub Issues."
   echo "- Require squash merge and set merge commit title as PR title and message as PR description."
   echo "- Delete branch on merge."
   curl -L \
+    --silent \
+    --output /dev/null \
+    --show-error \
+    --fail \
     -X PATCH \
     -H "Accept: application/vnd.github+json" \
     -H "Authorization: Bearer ${TOKEN}" \
@@ -25,31 +53,26 @@ configure_repository () {
   # Configure main branch protection rules
   # Requires token with permissions: administration:write
   # https://docs.github.com/en/rest/branches/branch-protection?apiVersion=2022-11-28#update-branch-protection
+  echo ""
   echo "Setting main branch protection rules..."
   echo "- Require CICD status checks to pass."
   echo "- Require 1 review from a Code Owner that did not commit the last push."
   echo "- Require linear commit history."
   echo "- Dismiss stale reviews."
   echo "- Lock branch."
+  echo "- Enable fork syncing."
+  echo "- Enforce rules for admins."
   curl -L \
+    --silent \
+    --output /dev/null \
+    --show-error \
+    --fail \
     -X PUT \
     -H "Accept: application/vnd.github+json" \
     -H "Authorization: Bearer ${TOKEN}" \
     -H "X-GitHub-Api-Version: 2022-11-28" \
     https://api.github.com/repos/${OWNER}/${REPO}/branches/main/protection \
-    -d '{"required_status_checks":{"strict":true,"checks":[{"context":"cicd"}],"required_pull_request_reviews":{"dismiss_stale_reviews":true,"require_code_owner_reviews":true,"required_approving_review_count":1,"require_last_push_approval":true,"restrictions":null,"required_linear_history":true,"lock_branch":true}'
-
-  # Setup GitHub Pages for Documentation
-  # Requires token with permissions: pages:write and administration:write
-  # https://docs.github.com/en/rest/pages/pages?apiVersion=2022-11-28#create-a-github-pages-site
-  echo "Creating GitHub Pages for documentation with 'gh-pages' branch and '/docs' path..."
-  curl -L \
-    -X POST \
-    -H "Accept: application/vnd.github+json" \
-    -H "Authorization: Bearer ${TOKEN}" \
-    -H "X-GitHub-Api-Version: 2022-11-28" \
-    https://api.github.com/repos/${OWNER}/${REPO}/pages \
-    -d '{"source":{"branch":"gh-pages","path":"/docs"}}'
+    -d '{"required_status_checks":{"strict":true,"checks":[{"context":"cicd"}]},"enforce_admins":true,"required_pull_request_reviews":{"dismiss_stale_reviews":true,"require_code_owner_reviews":true,"required_approving_review_count":1,"require_last_push_approval":true},"restrictions":null,"required_linear_history":true,"allow_force_pushes":false,"allow_deletions":false,"block_creations":false,"required_conversation_resolution":false,"lock_branch":true,"allow_fork_syncing":true}'
 }
 
-configure_repository
+get_variables

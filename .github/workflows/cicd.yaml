@@ -31,26 +31,29 @@ jobs:
           python-version-file: "pyproject.toml"
           cache: "poetry"
 
+      - name: Install Mise
+        run: curl https://mise.run | sh
+
       - name: Install Dependencies
-        run: make init
+        run: mise run init
 
       - name: Lint
-        run: make lint
+        run: mise run lint
 
       - name: Test
-        run: make test
+        run: mise run test
 
       - name: Automatic Release
         if: ${{ github.event_name == 'push' }}
         run: |
-          make release TOKEN=${{ secrets.GITHUB_TOKEN }}
+          mise run release TOKEN=${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish Documentation
         if: ${{ github.event_name == 'release' }}
-        run: make docs
+        run: mise run docs
 
       - name: Publish Package
         if: ${{ github.event_name == 'release' }}
         run: |
           poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN }}
-          make publish
+          mise run publish

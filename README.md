@@ -42,33 +42,23 @@ if __name__ == "__main__":
 
 Requirements:
 
+- [mise](https://mise.jdx.dev/)
 - [python](https://www.python.org/) 3.8 or greater
 - [poetry](https://python-poetry.org/)
-- [make](https://www.gnu.org/software/make/)
+
+### Repository Mangement
+
+This repository uses [mise](https://mise.jdx.dev/) for tool and task management.
+
+List all available commands with `mise tasks`.
 
 ### Package Management
 
 This repository uses [poetry](https://python-poetry.org/) for python package management.
 
-- `poetry install --sync` install/update dependencies, aliased to `make init`.
+- `poetry install --sync` install/update dependencies, aliased to `mise run init`.
 - `poetry add` add a dependency ie. `poetry add black`.
 - `poetry add -D` add a development dependency ie. `poetry add -D black`.
 - `poetry remove` remove a dependency ie. `poetry remove black`.
-- `poetry shell` activate the python virtual environment.
+- `poetry shell` activate the python virtual environment for access to installed packages.
 - `exit` exit the python virtual environment.
-
-### Repository Mangement
-
-- `make run` runs the main module.
-- `make pr` runs all pull request pre-checks below.
-- `make format` runs code formatter.
-- `make lint` checks code linting.
-- `make test` runs tests.
-
-## Repository TODO:
-
-- Automatic Publish CICD
-- Test Makefile replacements
-  - [mise](https://mise.jdx.dev/)
-  - [Poetry run](https://python-poetry.org/docs/cli/#run)
-  - [doit](https://pydoit.org/)
