@@ -4,13 +4,21 @@ set -e # Exit on error
 
 VERSION_FILE="pyproject.toml"
 CURRENT_BRANCH=$( git branch --show-current )
+CURRENT_REF=$( git log -1 --format='%H' )
+ORIGIN_MAIN_REF=$( git show-ref -s refs/remotes/origin/main )
 
-if [[ ${CURRENT_BRANCH} == "main" ]]
+# Skip check on GitHub Actions runs that checkout main ie. Release
+if [[ "${CURRENT_REF}" == "${ORIGIN_MAIN_REF}" ]]
+then
+  echo "Ref matches origin main HEAD, skipping version check."
+# Skip if running locally on main
+elif [[ ${CURRENT_BRANCH} == "main" ]]
 then
   echo "On main branch, skipping version check."
+# Run version update check.
 else
   echo "Checking version in '${VERSION_FILE}' is updated from main branch..."
-  # True if version has been changed from main branch
+  # True if version has been changed from main branch.
   VERSION_UPDATED=$( git diff origin/main -- ${VERSION_FILE} | grep -E '^\+version' )
   if [[ -z ${VERSION_UPDATED} ]]
   then
