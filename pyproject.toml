@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "awsync"
-version = "0.4.2"
+version = "0.4.3"
 description = "An asynchronous, fully-typed AWS API library with a focus on being understandable, reliable, and maintainable."
 license = "Apache-2.0"
 authors = ["JKCT <jkct@visceralfx.com>"]

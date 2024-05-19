@@ -50,12 +50,14 @@ jobs:
         run: |
           mise run release ${{ secrets.GITHUB_TOKEN }}
 
+      # Run if automatic release (push) or manual release (release)
+      # Automatic run (push) will not trigger another action (relase) run.
       - name: Publish Documentation
-        if: ${{ github.event_name == 'release' }}
+        if: ${{ github.event_name == 'push' || github.event_name == 'release' }}
         run: mise run docs
 
       - name: Publish Package
-        if: ${{ github.event_name == 'release' }}
+        if: ${{ github.event_name == 'push' || github.event_name == 'release' }}
         run: |
           poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN }}
           mise run publish
