@@ -48,7 +48,7 @@ jobs:
       - name: Automatic Release
         if: ${{ github.event_name == 'push' }}
         run: |
-          mise run release TOKEN=${{ secrets.GITHUB_TOKEN }}
+          mise run release ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish Documentation
         if: ${{ github.event_name == 'release' }}
