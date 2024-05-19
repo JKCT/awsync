@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Include main branch for version update check
 
       - name: Set PATH # Must be done to find pipx and poetry commands
         run: echo "$(python3 -m site --user-base)/bin:${HOME}/.local/bin:${PATH}" >> $GITHUB_PATH
