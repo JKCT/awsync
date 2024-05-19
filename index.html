@@ -308,15 +308,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#package-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      Package Management
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#repository-mangement" class="md-nav__link">
     <span class="md-ellipsis">
       Repository Mangement
@@ -325,17 +316,17 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#repository-todo" class="md-nav__link">
+          <li class="md-nav__item">
+  <a href="#package-management" class="md-nav__link">
     <span class="md-ellipsis">
-      Repository TODO:
+      Package Management
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -368,7 +359,7 @@
 <h1 id="awsync">awsync</h1>
 <p><img alt="CICD" src="https://github.com/JKCT/awsync/actions/workflows/cicd.yaml/badge.svg" /></p>
 <p>An asynchronous, fully-typed AWS API library with a focus on being understandable, reliable, and maintainable.</p>
-<p>Read <a href="https://JKCT.github.io/awsync">the documentation</a></p>
+<p>Read <a href="https://jkct.github.io/awsync/">the documentation</a>.</p>
 <p><strong>NOTE: Currently a work in progress!</strong>
 Only a few API methods currently implemented for testing and development.</p>
 <h2 id="usage">Usage</h2>
@@ -400,42 +391,22 @@ if __name__ == &quot;__main__&quot;:
 <h2 id="local-developer-setup">Local Developer Setup</h2>
 <p>Requirements:</p>
 <ul>
+<li><a href="https://mise.jdx.dev/">mise</a></li>
 <li><a href="https://www.python.org/">python</a> 3.8 or greater</li>
 <li><a href="https://python-poetry.org/">poetry</a></li>
-<li><a href="https://www.gnu.org/software/make/">make</a></li>
-</ul>
-<h3 id="package-management">Package Management</h3>
-<p>This repository users <a href="https://python-poetry.org/">poetry</a> for python package management.</p>
-<ul>
-<li><code>poetry install --sync</code> install/update dependencies, aliased to <code>make init</code>.</li>
-<li><code>poetry add</code> add a dependency ie. <code>poetry add httpx</code>.</li>
-<li><code>poetry add -D</code> add a development dependency ie. <code>poetry add -D black</code>.</li>
-<li><code>poetry remove</code> remove a dependency ie. <code>poetry remove httpx</code>.</li>
-<li><code>poetry shell</code> activate the python virtual environment.</li>
-<li><code>exit</code> exit the python virtual environment.</li>
 </ul>
 <h3 id="repository-mangement">Repository Mangement</h3>
+<p>This repository uses <a href="https://mise.jdx.dev/">mise</a> for tool and task management.</p>
+<p>List all available commands with <code>mise tasks</code>.</p>
+<h3 id="package-management">Package Management</h3>
+<p>This repository uses <a href="https://python-poetry.org/">poetry</a> for python package management.</p>
 <ul>
-<li><code>make run</code> runs the main module.</li>
-<li><code>make pr</code> runs all pull request pre-checks below.</li>
-<li><code>make format</code> runs code formatter.</li>
-<li><code>make lint</code> checks code linting.</li>
-<li><code>make docs</code> publishes documentation to GitHub pages.</li>
-<li><code>make release</code> creates a GitHub release.</li>
-<li><code>make publish</code> publishes package to Pypi.</li>
-<li><code>make test</code> runs tests.</li>
-</ul>
-<h2 id="repository-todo">Repository TODO:</h2>
-<ul>
-<li>Documentation with <a href="https://squidfunk.github.io/mkdocs-material/">mkDocs</a></li>
-<li>Automatic Publish CICD</li>
-<li>pylint</li>
-<li>Template Repository setup script</li>
-<li>Test Makefile replacements</li>
-<li><a href="https://mise.jdx.dev/">mise</a></li>
-<li><a href="https://python-poetry.org/docs/cli/#run">Poetry run</a></li>
-<li><a href="https://pydoit.org/">doit</a></li>
-<li>Code generation <a href="https://github.com/boto/botocore/tree/develop/botocore/data">from JSON</a></li>
+<li><code>poetry install --sync</code> install/update dependencies, aliased to <code>mise run init</code>.</li>
+<li><code>poetry add</code> add a dependency ie. <code>poetry add black</code>.</li>
+<li><code>poetry add -D</code> add a development dependency ie. <code>poetry add -D black</code>.</li>
+<li><code>poetry remove</code> remove a dependency ie. <code>poetry remove black</code>.</li>
+<li><code>poetry shell</code> activate the python virtual environment for access to installed packages.</li>
+<li><code>exit</code> exit the python virtual environment.</li>
 </ul>
 
 
