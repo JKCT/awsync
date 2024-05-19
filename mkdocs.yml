@@ -1,0 +1,14 @@
+site_name: awsync Documentation
+repo_url: https://github.com/JKCT/awsync
+theme:
+  name: material
+  icon:
+    repo: fontawesome/brands/github
+  features:
+    - navigation.tabs
+    - toc.integrate
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+nav:
+  - Home: "index.md"

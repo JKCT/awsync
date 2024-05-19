@@ -7,12 +7,17 @@ on:
   release: # https://docs.github.com/en/webhooks/webhook-events-and-payloads?actionType=released#release
     types: [released] # A release was published, or a pre-release was changed to a release.
 
+permissions:
+  contents: write # Create releases and publish to pages
+
 jobs:
   cicd:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Include main branch for version update check
 
       - name: Set PATH # Must be done to find pipx and poetry commands
         run: echo "$(python3 -m site --user-base)/bin:${HOME}/.local/bin:${PATH}" >> $GITHUB_PATH
@@ -28,23 +33,29 @@ jobs:
           python-version-file: "pyproject.toml"
           cache: "poetry"
 
+      - name: Install Mise
+        run: curl https://mise.run | sh
+
       - name: Install Dependencies
-        run: make init
+        run: mise run init
 
       - name: Lint
-        run: make lint
+        run: mise run lint
 
       - name: Test
-        run: make test
+        run: mise run test
 
       - name: Automatic Release
         if: ${{ github.event_name == 'push' }}
         run: |
-          # Save token with 'Read and write' access to 'Contents' for this respository
-          # as a Actions secret named 'GH_TOKEN' on this respository.
-          echo "${{ secrets.GH_TOKEN }}" | gh auth login --with-token
-          make release
+          mise run release TOKEN=${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish
+      - name: Publish Documentation
         if: ${{ github.event_name == 'release' }}
-        run: make publish ARGS="${{ github.event.release.name }}" # Pass the release name
+        run: mise run docs
+
+      - name: Publish Package
+        if: ${{ github.event_name == 'release' }}
+        run: |
+          poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN }}
+          mise run publish

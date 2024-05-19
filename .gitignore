@@ -1,4 +1,6 @@
 # Poetry packaging
 dist/
+# MKDocs documentation build directory
+site/
 # Test coverage
 .coverage

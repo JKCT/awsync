@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# mise description="Format documentation."
+set -e # Exit on error
+
+# Get example code from main file, turn newlines into \n for perl parsing.
+EXAMPLE_CODE=$( awk '{printf "%s\\n", $0}' awsync/__main__.py )
+# Sync example code into README python markdown block.
+perl -i -p0e 's/```python\n.*?\n```/```python\n'"${EXAMPLE_CODE}"'```/s' README.md
+
+# Sync README to documentation index.
+cp README.md docs/index.md

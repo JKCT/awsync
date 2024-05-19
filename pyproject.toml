@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "awsync"
-version = "0.3.1"
+version = "0.4.0"
 description = "An asynchronous, fully-typed AWS API library with a focus on being understandable, reliable, and maintainable."
 license = "Apache-2.0"
 authors = ["JKCT <jkct@visceralfx.com>"]
@@ -15,7 +15,8 @@ classifiers = [
 ]
 keywords = ["aws", "async", "boto", "request", "sdk", "typed"]
 repository = "https://github.com/JKCT/awsync"
-include = ["py.typed"]
+documentation = "https://jkct.github.io/awsync/"
+include = ["py.typed"] # Typed marker file to indicate package type support
 
 [tool.poetry.dependencies]
 python = "^3.8"
@@ -27,6 +28,7 @@ mypy = "^1.9.0"
 pytest = "^8.1.1"
 pytest-cov = "^5.0.0"
 pytest-asyncio = "^0.23.6"
+mkdocs-material = "^9.5.23"
 
 [tool.mypy]
 strict = true
@@ -34,10 +36,10 @@ color_output = true
 cache_dir = "/tmp/cache/.mypy_cache"
 
 [tool.coverage.run]
-omit = ["__main__.py"]
+omit = ["__main__.py"] # Exclude files from test coverage
 
 [tool.coverage.report]
-exclude_also = [
+exclude_also = [ # Exclude code branches by pattern from test coverage
     "async def list_stack_resources",
     "async def get_resource",
     "async def invoke",
@@ -46,6 +48,7 @@ exclude_also = [
 [tool.pytest.ini_options]
 testpaths = "tests"
 cache_dir = "/tmp/cache/.pytest_cache"
+# Require 100% coverage, use exclusions above instead of decreasing percent.
 addopts = "-vv --cov=awsync --cov-report term-missing:skip-covered --cov-fail-under=100"
 
 [build-system]
