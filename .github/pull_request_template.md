@@ -25,9 +25,9 @@ resolves: #<issue number>
 Please select the revision for these changes based on Semantic Versioning: https://semver.org/
 -->
 
-[ ] **MAJOR**: version when you make incompatible API changes
-[ ] **MINOR**: version when you add functionality in a backward compatible manner
-[ ] **PATCH**: version when you make backward compatible bug fixes
+- [ ] **MAJOR**: version when you make incompatible API changes
+- [ ] **MINOR**: version when you add functionality in a backward compatible manner
+- [ ] **PATCH**: version when you make backward compatible bug fixes
 
 <!--
 If revision is MAJOR, please uncomment this line and describe the breaking changes:
