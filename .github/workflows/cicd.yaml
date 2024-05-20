@@ -25,6 +25,11 @@ jobs:
           echo "$HOME/.local/share/mise/bin" >> $GITHUB_PATH
           echo "$HOME/.local/share/mise/shims" >> $GITHUB_PATH
           echo "$PATH"
+
+      - name: Install pipx
+        run: |
+          echo "$GITHUB_PATH"
+          echo "$PATH"
           pip install --user pipx # Install pipx with the mise installed python
 
       - name: Install Dependencies
