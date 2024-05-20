@@ -22,17 +22,6 @@ jobs:
       - name: Set PATH # Must be done to find pipx and poetry commands
         run: echo "$(python3 -m site --user-base)/bin:${HOME}/.local/bin:${PATH}" >> $GITHUB_PATH
 
-      - name: Install Poetry # Must be done before Setup Python to use caching
-        run: |
-          pip install -U pip pipx
-          pipx install poetry
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version-file: "pyproject.toml"
-          cache: "poetry"
-
       - name: Install Mise
         run: curl https://mise.run | sh
 
