@@ -289,6 +289,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#getting-started" class="md-nav__link">
+    <span class="md-ellipsis">
+      Getting Started
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#usage" class="md-nav__link">
     <span class="md-ellipsis">
       Usage
@@ -359,7 +368,8 @@
 <h1 id="awsync">awsync</h1>
 <p><img alt="CICD" src="https://github.com/JKCT/awsync/actions/workflows/cicd.yaml/badge.svg" /></p>
 <p>An asynchronous, fully-typed AWS API library with a focus on being understandable, reliable, and maintainable.</p>
-<p>Read <a href="https://jkct.github.io/awsync/">the documentation</a>.</p>
+<h2 id="getting-started">Getting Started</h2>
+<p>📖 Read <a href="https://jkct.github.io/awsync/">the documentation</a>!</p>
 <p><strong>NOTE: Currently a work in progress!</strong>
 Only a few API methods currently implemented for testing and development.</p>
 <h2 id="usage">Usage</h2>
@@ -395,13 +405,15 @@ if __name__ == &quot;__main__&quot;:
 <li><a href="https://www.python.org/">python</a> 3.8 or greater</li>
 <li><a href="https://python-poetry.org/">poetry</a></li>
 </ul>
+<p><a href="https://mise.jdx.dev/getting-started.html">Install mise</a> then run <code>mise run init</code> to setup python, poetry, and install dependencies.</p>
 <h3 id="repository-mangement">Repository Mangement</h3>
 <p>This repository uses <a href="https://mise.jdx.dev/">mise</a> for tool and task management.</p>
 <p>List all available commands with <code>mise tasks</code>.</p>
+<p>Run all pull request checks locally with <code>mise run pr</code></p>
 <h3 id="package-management">Package Management</h3>
 <p>This repository uses <a href="https://python-poetry.org/">poetry</a> for python package management.</p>
 <ul>
-<li><code>poetry install --sync</code> install/update dependencies, aliased to <code>mise run init</code>.</li>
+<li><code>poetry install --sync</code> install/update dependencies.</li>
 <li><code>poetry add</code> add a dependency ie. <code>poetry add black</code>.</li>
 <li><code>poetry add -D</code> add a development dependency ie. <code>poetry add -D black</code>.</li>
 <li><code>poetry remove</code> remove a dependency ie. <code>poetry remove black</code>.</li>
