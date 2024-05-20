@@ -19,8 +19,12 @@ jobs:
         with:
           fetch-depth: 0 # Include main branch for version update check
 
-      - name: Install Mise # Automatically uses latest, caching, and runs `mise install`.
-        uses: jdx/mise-action@v2
+      - name: Install Mise
+        run: |
+          curl https://mise.jdx.dev/install.sh | sh
+          echo "$HOME/.local/share/mise/bin" >> $GITHUB_PATH
+          mise use -g python # Use the mise installed python
+          pip install --user pipx # Install pipx with the mise installed python
 
       - name: Install Dependencies
         run: mise run init
