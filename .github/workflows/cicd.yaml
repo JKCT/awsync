@@ -18,10 +18,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Include main branch for version update check
-      - name: Install Mise
-        run: |
-          curl https://mise.run | sh
-          mise activate --shims
+
+      - name: Install Mise # Automatically uses latest, caching, and runs `mise install`.
+        uses: jdx/mise-action@v2
 
       - name: Install Dependencies
         run: mise run init
