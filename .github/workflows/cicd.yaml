@@ -22,8 +22,7 @@ jobs:
       - name: Install Mise
         run: |
           curl https://mise.jdx.dev/install.sh | sh
-          echo "$HOME/.local/share/mise/bin" >> $GITHUB_PATH
-          mise use -g python # Use the mise installed python
+          echo "$HOME/.local/share/mise/bin:${GITHUB_PATH}" > $GITHUB_PATH # Prioritize mise PATH versions
           pip install --user pipx # Install pipx with the mise installed python
 
       - name: Install Dependencies
