@@ -23,17 +23,9 @@ jobs:
         run: |
           curl https://mise.jdx.dev/install.sh | sh
           echo "$HOME/.local/share/mise/bin" >> $GITHUB_PATH
-          echo "$HOME/.local/share/mise/shims" >> $GITHUB_PATH
-          echo "$PATH"
-
-      - name: Install pipx
-        run: |
-          echo "$GITHUB_PATH"
-          echo "$PATH"
-          pip install --user pipx # Install pipx with the mise installed python
 
       - name: Install Dependencies
-        run: mise run init
+        run: mise run init CI
 
       - name: Lint
         run: mise run lint

@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# mise description="Run tool setup and install packages."
+set -e # Exit on error
+
+echo "Installing tools with mise..."
+# If CI argument is passed do CICD specific steps first
+if [[ ${1} == "CI" ]]
+then
+  mise install python
+  echo "$PATH"
+  which python
+  which pip
+  pip install --user pipx
+fi
+
+mise install
+poetry install --sync
