@@ -4,7 +4,9 @@
 
 An asynchronous, fully-typed AWS API library with a focus on being understandable, reliable, and maintainable.
 
-Read [the documentation](https://jkct.github.io/awsync/).
+## Getting Started
+
+📖 Read [the documentation](https://jkct.github.io/awsync/)!
 
 **NOTE: Currently a work in progress!**
 Only a few API methods currently implemented for testing and development.
@@ -46,17 +48,21 @@ Requirements:
 - [python](https://www.python.org/) 3.8 or greater
 - [poetry](https://python-poetry.org/)
 
+[Install mise](https://mise.jdx.dev/getting-started.html) then run `mise run init` to setup python, poetry, and install dependencies.
+
 ### Repository Mangement
 
 This repository uses [mise](https://mise.jdx.dev/) for tool and task management.
 
 List all available commands with `mise tasks`.
 
+Run all pull request checks locally with `mise run pr`
+
 ### Package Management
 
 This repository uses [poetry](https://python-poetry.org/) for python package management.
 
-- `poetry install --sync` install/update dependencies, aliased to `mise run init`.
+- `poetry install --sync` install/update dependencies.
 - `poetry add` add a dependency ie. `poetry add black`.
 - `poetry add -D` add a development dependency ie. `poetry add -D black`.
 - `poetry remove` remove a dependency ie. `poetry remove black`.

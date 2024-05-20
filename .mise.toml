@@ -1,13 +1,10 @@
 [tools]
 python = "3.12"
+"pipx:poetry" = "latest"
 
 [settings]
 jobs = 8            # number of plugins or runtimes to install in parallel. The default is `4`.
 experimental = true # enable experimental features
-
-[tasks.init]
-description = 'Run local setup - install packages.'
-run = "poetry install --sync"
 
 [tasks.run]
 description = 'Run package main file.'

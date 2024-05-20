@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# mise description="Run tool setup and install packages."
+set -e # Exit on error
+
+echo "Installing tools with mise..."
+# If CI argument is passed do CICD specific steps first.
+if [[ ${1} == "CI" ]]
+then
+  # Ensure pipx is installed with project python version (not default).
+  mise install python
+  pip install --user pipx
+fi
+
+# Will install poetry with pipx and project python version if not already installed.
+mise install # Idempotent install all tools in .mise.toml.
+poetry install --sync # Install python packages with poetry.

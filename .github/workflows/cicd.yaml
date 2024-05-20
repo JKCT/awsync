@@ -19,25 +19,14 @@ jobs:
         with:
           fetch-depth: 0 # Include main branch for version update check
 
-      - name: Set PATH # Must be done to find pipx and poetry commands
-        run: echo "$(python3 -m site --user-base)/bin:${HOME}/.local/bin:${PATH}" >> $GITHUB_PATH
-
-      - name: Install Poetry # Must be done before Setup Python to use caching
-        run: |
-          pip install -U pip pipx
-          pipx install poetry
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version-file: "pyproject.toml"
-          cache: "poetry"
-
       - name: Install Mise
-        run: curl https://mise.run | sh
+        run: |
+          curl https://mise.jdx.dev/install.sh | sh
+          echo "$HOME/.local/share/mise/bin" >> $GITHUB_PATH
+          echo "$HOME/.local/share/mise/shims" >> $GITHUB_PATH
 
       - name: Install Dependencies
-        run: mise run init
+        run: mise run init CI
 
       - name: Lint
         run: mise run lint
