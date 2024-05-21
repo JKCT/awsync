@@ -1,10 +1,19 @@
 [tools]
 python = "3.12"
-"pipx:poetry" = "latest"
+"pipx:poetry" = "latest" # Also install poetry via pipx
 
 [settings]
-jobs = 8            # number of plugins or runtimes to install in parallel. The default is `4`.
+jobs = 8 # number of plugins or runtimes to install in parallel. The default is `4`.
 experimental = true # enable experimental features
+# Install a default list of packages when installing python (adds pipx before poetry install)
+python_default_packages_file = ".default-python-packages"
+
+[tasks.init]
+description = "Run tool setup and install packages."
+run = [ # multiple commands are run in series
+    "mise install",
+    "poetry install --sync",
+]
 
 [tasks.run]
 description = 'Run package main file.'
